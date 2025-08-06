@@ -17,8 +17,11 @@ function parseMetadata(lines: string[]): Metadata {
                 metadata.level = values[0];
                 break;
             case "DIFFICULT":
-                metadata.difficult = values[0];
+                metadata.difficult = parseInt(values[0]);
                 break;
+            case "BPM_DEF":
+                metadata.bpm = parseInt(values[0]);
+                metadata.bpm_def = [parseInt(values[0]), parseInt(values[1]), parseInt(values[2]), parseInt(values[3])]
             default:
                 console.log(`Unknown Properties: ${header} | ${values.join(" | ")}`)
         }
@@ -50,13 +53,11 @@ function parseNotes(lines: string[]): Note[] {
         note.cell = parseInt(values[2]);
         note.width = parseInt(values[3]);
         if (header == "CHR") {
+            note.chunithm_type = "CHR"
             const CHR_Last = values[values.length - 1];
             if (CHR_Last == "UP" || CHR_Last == "CE" || CHR_Last == "CW") {
                 note.type = NoteType.ExNote
                 note.unknown = CHR_Last;
-            } else {
-                // HOLD
-                note.duration = parseInt(CHR_Last);
             }
         } else if (header == "SLD" || header == "SLC") {
             note.type = NoteType.Slide
@@ -67,7 +68,7 @@ function parseNotes(lines: string[]): Note[] {
         } else if (header == "FLK") {
             note.type = NoteType.Flick
             note.unknown = values[4];
-        } else if (header == "AIR" || "AUR" || "AUL") {
+        } else if (header == "AIR" || header == "AUR" || header == "AUL") {
             note.type = NoteType.Air;
             note.targetNote = parseInt(values[4]);
             switch (header) {
@@ -106,6 +107,11 @@ function parseNotes(lines: string[]): Note[] {
             }
         } else if (header == "MNE") {
             note.type = NoteType.Mine
+        } else if (header == "HLD") {
+            const CHR_Last = values[values.length - 1];
+            note.chunithm_type = "HLD"
+            note.type = NoteType.Hold
+            note.duration = parseInt(CHR_Last);
         } else {
             note.type = NoteType.Unknown
             console.log(`Fuck you  ${header} ${values.join(" ")}`)
