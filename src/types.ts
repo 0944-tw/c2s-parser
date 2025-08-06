@@ -23,12 +23,14 @@ export enum Direction {
 export type Metadata = {
     version?: string
     level?: string
-    difficult?: string
+    difficult?: number
+    bpm?: number
+    bpm_def?: number[]
 }
 
 export type Note = {
     type: NoteType,
-    chunithm_type: "TAP" | "CHR" | "SLD" | "SLC" | "FLK" | "AUR" | "AIR" | "AUL" | "AHD" | "ADW" | "ADR" | "ADL" | "MNE"
+    chunithm_type: "TAP" | "CHR" | "SLD" | "SLC" | "FLK" | "AUR" | "AIR" | "AUL" | "AHD" | "ADW" | "ADR" | "ADL" | "MNE" | "HLD"
     measure: number
     offset: number
     cell: number
@@ -40,4 +42,4 @@ export type Note = {
     unknown?: string
     direction?: string
 }
-export {}; 
+export { }; 
